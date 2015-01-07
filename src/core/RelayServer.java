@@ -25,7 +25,8 @@ public class RelayServer implements Runnable{
 		this.relayHandle=new RelayHandle();
         try {
 			this.socket = new DatagramSocket(this.port);
-			this.executorService = Executors.newFixedThreadPool(50);
+			//this.executorService = Executors.newFixedThreadPool(50);
+			this.executorService = Executors.newCachedThreadPool();
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +72,8 @@ public class RelayServer implements Runnable{
   		final DatagramPacket sendPacket = new DatagramPacket(data, data.length, remoteAddress, remotePort);
     	executorService.execute(new Runnable(){
     	    public void run() {
-              	 try{	    				    		
+              	 try{	 
+              		 System.out.println("Send UDP message!");
                		 socket.send(sendPacket);
                	 }
                	 catch(Exception e){
