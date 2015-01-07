@@ -29,13 +29,12 @@ public class RelayHandle {
 		InetAddress remoteAddress = receivedPacket.getAddress();
 		int remotePort=receivedPacket.getPort();
 		
-		System.out.println(remoteAddress);
+		//System.out.println(remoteAddress);
 		
 		//System.out.println("public address: "+ remoteAddress);
 		//System.out.println("public port: "+remotePort);
 
-		Endpoint publicEndpoint=new Endpoint(remoteAddress.getHostName(),
-				remotePort);
+		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
 		
 		if(!relayEndpoints.containsKey(publicEndpoint)){		
 			
@@ -128,7 +127,7 @@ public class RelayHandle {
 				//System.out.println(publicEndpoint);
 				System.out.println(otherEndpoint);
 			
-				UDPServer.sendMessage(receivedPacket.getData(), InetAddress.getByName(otherEndpoint.getAddress()), otherEndpoint.getPort());
+				UDPServer.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
 			}
 			catch(Exception e){
 				e.printStackTrace();

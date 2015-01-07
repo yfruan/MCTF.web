@@ -1,6 +1,7 @@
 package protocol;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 
 // store the private and public address and port of user
 public class Endpoint implements Serializable{
@@ -8,17 +9,16 @@ public class Endpoint implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String address;
+	
+	private InetAddress address;
 	private int port;
-	//private int videoPort;
-	//private int audioPort;
 
-	public Endpoint(String address, int port) {
+	public Endpoint(InetAddress address, int port) {
 		this.address = address;
 		this.port = port;
 	}
 	
-	public String getAddress() {
+	public InetAddress getAddress() {
 		return address;
 	}
 	
