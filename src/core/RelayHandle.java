@@ -54,8 +54,8 @@ public class RelayHandle {
 				
 					case STUNFlag.REGISTER:{
 						Endpoint privateEndpoint=(Endpoint)simpleSTUN.getContent();
-						System.out.println("private address: "+privateEndpoint.getAddress());
-						System.out.println("private port: "+privateEndpoint.getPort());
+						//System.out.println("private address: "+privateEndpoint.getAddress());
+						//System.out.println("private port: "+privateEndpoint.getPort());
 						
 						NetworkInfo info=new NetworkInfo(senderId,privateEndpoint,publicEndpoint);
 						networkInfos.put(senderId, info);
@@ -79,8 +79,10 @@ public class RelayHandle {
 					
 					case STUNFlag.RELAY:{
 						String userId=(String) simpleSTUN.getContent();
+						
+						System.out.println(publicEndpoint);
+						
 						if(networkInfos.containsKey(userId)){
-							
 							NetworkInfo info=networkInfos.get(userId);
 							Endpoint otherEndpoint=info.getPublicEndpoint();	
 							relayEndpoints.put(publicEndpoint, otherEndpoint);
