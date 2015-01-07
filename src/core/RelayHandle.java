@@ -28,6 +28,9 @@ public class RelayHandle {
 		
 		InetAddress remoteAddress = receivedPacket.getAddress();
 		int remotePort=receivedPacket.getPort();
+		
+		System.out.println(remoteAddress);
+		
 		//System.out.println("public address: "+ remoteAddress);
 		//System.out.println("public port: "+remotePort);
 
