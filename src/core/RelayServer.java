@@ -55,7 +55,8 @@ public class RelayServer implements Runnable{
   		
     	executorService.execute(new Runnable(){
     	    public void run() {
-              	 try{	    				    		
+              	 try{	    		
+              		 System.out.println("Send UDP message!");
                		 socket.send(sendPacket);
                	 }
                	 catch(Exception e){
