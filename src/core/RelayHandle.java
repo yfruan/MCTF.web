@@ -126,7 +126,7 @@ public class RelayHandle {
 				timeStamps.put(publicEndpoint,System.currentTimeMillis());
 				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 						
-				//System.out.println(publicEndpoint);
+				System.out.println(publicEndpoint);
 				System.out.println(otherEndpoint);
 			
 				UDPServer.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
