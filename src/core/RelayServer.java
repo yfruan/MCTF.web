@@ -25,7 +25,7 @@ public class RelayServer implements Runnable{
 		this.relayHandle=new RelayHandle();
         try {
 			this.socket = new DatagramSocket(this.port);
-			this.executorService = Executors.newCachedThreadPool();
+			this.executorService = Executors.newFixedThreadPool(50);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
