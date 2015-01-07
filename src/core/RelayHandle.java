@@ -130,7 +130,8 @@ public class RelayHandle {
 				System.out.println(otherEndpoint);
 				System.out.println(receivedPacket.getData().length);
 			
-				UDPServer.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
+				Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
+				UDPServer.sendMessage(message, otherEndpoint.getAddress(), otherEndpoint.getPort());
 				//UDPServer.sendMessage(receivedPacket.getData(), publicEndpoint.getAddress(), publicEndpoint.getPort());
 
 			}
