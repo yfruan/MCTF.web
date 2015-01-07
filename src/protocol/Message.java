@@ -1,6 +1,7 @@
 package protocol;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Message implements Serializable{
 	
@@ -19,7 +20,7 @@ public class Message implements Serializable{
 	
 	private Object payload=null;
 	
-	private static int count=0;
+	private static AtomicInteger count=new AtomicInteger(0);
 	
 	public final static int REQUEST=0;
 	public final static int REPLY=1;
@@ -36,8 +37,7 @@ public class Message implements Serializable{
 		this.senderId=senderId;
 		this.eventHeader=eventHeader;
 		this.payload=payload;
-		this.messageId=count;
-		count++;
+		this.messageId=count.getAndIncrement();
 	}
 	
 	public Message(String senderId,int eventHeader, int code, Object payload){
@@ -45,8 +45,7 @@ public class Message implements Serializable{
 		this.eventHeader=eventHeader;
 		this.code=code;
 		this.payload=payload;
-		this.messageId=count;
-		count++;
+		this.messageId=count.getAndIncrement();
 	}
 	
 	public Message(String senderId,int eventHeader, int code, int repliedMessageId,Object payload){
@@ -55,8 +54,7 @@ public class Message implements Serializable{
 		this.code=code;
 		this.repliedMessageId=repliedMessageId;
 		this.payload=payload;
-		this.messageId=count;
-		count++;
+		this.messageId=count.getAndIncrement();
 	}
 	
 	public int getCode(){
