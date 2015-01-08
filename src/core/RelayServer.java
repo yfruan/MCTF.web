@@ -38,11 +38,12 @@ public class RelayServer implements Runnable{
 	        while (!isStopped()) {	
 	        	
 		        byte[] receiveData = new byte[MAXPACKETSIZE];
-		    	final DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
+		    	DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
         		socket.receive(receivedPacket);
         		
-        		final RelayServer relayServer=this;
-        		   
+        		//final RelayServer relayServer=this;
+        		  
+        		/*
             	executorService.execute(new Runnable(){
             	    public void run() {
                       	try{	    		
@@ -53,9 +54,9 @@ public class RelayServer implements Runnable{
                        		 e.printStackTrace();
                        	 }    	    
                    }
-            	});	
+            	});	*/
             	
-        		//relayHandle.process(this,receivedPacket);
+        		relayHandle.process(this,receivedPacket);
 	        }	        
 		}
 		catch (Exception e) {
