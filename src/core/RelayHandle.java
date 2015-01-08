@@ -37,6 +37,8 @@ public class RelayHandle {
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
     	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
     	
+    	//System.out.println(Arrays.toString(receivedPacket.getData()));
+    	
 		if(!relayEndpoints.containsKey(publicEndpoint)){		
 			
         	//Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());

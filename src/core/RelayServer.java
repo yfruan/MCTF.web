@@ -38,10 +38,24 @@ public class RelayServer implements Runnable{
 	        while (!isStopped()) {	
 	        	
 		        byte[] receiveData = new byte[MAXPACKETSIZE];
-		    	DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
+		    	final DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
         		socket.receive(receivedPacket);
-        		        		
-        		relayHandle.process(this,receivedPacket);
+        		
+        		final RelayServer relayServer=this;
+        		   
+            	executorService.execute(new Runnable(){
+            	    public void run() {
+                      	try{	    		
+                      		System.out.println("UDP message!");
+                      		relayHandle.process(relayServer,receivedPacket);
+                       	 }
+                       	 catch(Exception e){
+                       		 e.printStackTrace();
+                       	 }    	    
+                   }
+            	});	
+            	
+        		//relayHandle.process(this,receivedPacket);
 	        }	        
 		}
 		catch (Exception e) {
