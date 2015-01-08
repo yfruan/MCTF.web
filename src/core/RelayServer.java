@@ -47,7 +47,7 @@ public class RelayServer implements Runnable{
             	executorService.execute(new Runnable(){
             	    public void run() {
                       	try{	    		
-                      		System.out.println("UDP message!");
+                      		System.out.println("Process UDP message!");
                       		relayHandle.process(relayServer,receivedPacket);
                        	 }
                        	 catch(Exception e){

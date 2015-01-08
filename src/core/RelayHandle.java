@@ -123,6 +123,8 @@ public class RelayHandle {
 		}
 		else{
 			
+			System.out.println("Receiving message!!");
+			
 			try{
 				if(message.getEventHeader()!=EventHeader.PING){
 					System.out.println("Relay message!!");
