@@ -35,10 +35,11 @@ public class RelayHandle {
 		//System.out.println("public port: "+remotePort);
 
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
-		
+    	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
+    	
 		if(!relayEndpoints.containsKey(publicEndpoint)){		
 			
-        	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
+        	//Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
 			int repliedMessageId=message.getMessageId();
 			String senderId=message.getSenderId(); 
 			
@@ -121,19 +122,20 @@ public class RelayHandle {
 		else{
 			
 			try{
-				System.out.println("Relay message!!");
+				if(message.getEventHeader()!=EventHeader.PING){
+					System.out.println("Relay message!!");
 			
-				timeStamps.put(publicEndpoint,System.currentTimeMillis());
-				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
+					timeStamps.put(publicEndpoint,System.currentTimeMillis());
+					Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 						
-				System.out.println(publicEndpoint);
-				System.out.println(otherEndpoint);
-				System.out.println(receivedPacket.getData().length);
-			
-				Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
-				UDPServer.sendMessage(message, otherEndpoint.getAddress(), otherEndpoint.getPort());
-				//UDPServer.sendMessage(receivedPacket.getData(), publicEndpoint.getAddress(), publicEndpoint.getPort());
-
+					System.out.println(publicEndpoint);
+					System.out.println(otherEndpoint);
+					System.out.println(receivedPacket.getData().length);
+				
+					//Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
+					UDPServer.sendMessage(message, otherEndpoint.getAddress(), otherEndpoint.getPort());
+					//UDPServer.sendMessage(receivedPacket.getData(), publicEndpoint.getAddress(), publicEndpoint.getPort());
+				}
 			}
 			catch(Exception e){
 				e.printStackTrace();
