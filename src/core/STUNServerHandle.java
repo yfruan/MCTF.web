@@ -36,10 +36,10 @@ public class STUNServerHandle extends ServerHandle {
 
 		// System.out.println("public address: "+ remoteAddress);
 		// System.out.println("public port: "+remotePort);
-
 		Endpoint publicEndpoint = new Endpoint(remoteAddress, remotePort);
-		Message message = (Message) SerializationUtils.deserialize(receivedPacket.getData());
+		System.out.println(publicEndpoint);
 
+		Message message = (Message) SerializationUtils.deserialize(receivedPacket.getData());
 
 		int repliedMessageId = message.getMessageId();
 		String senderId = message.getSenderId();

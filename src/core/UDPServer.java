@@ -57,7 +57,7 @@ public class UDPServer implements Runnable{
     	executorService.execute(new Runnable(){
     	    public void run() {
               	 try{	    		
-              		 System.out.println("Send UDP message!");
+              		 //System.out.println("Send UDP message!");
                		 socket.send(sendPacket);
                	 }
                	 catch(Exception e){
@@ -72,7 +72,7 @@ public class UDPServer implements Runnable{
     	executorService.execute(new Runnable(){
     	    public void run() {
               	 try{	 
-              		 System.out.println("Send UDP message!");
+              		 //System.out.println("Send UDP message!");
                		 socket.send(sendPacket);
                	 }
                	 catch(Exception e){

@@ -3,7 +3,9 @@ package core;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Map;
+
 import org.apache.commons.lang3.SerializationUtils;
+
 import protocol.Endpoint;
 import protocol.EventHeader;
 import protocol.Message;
@@ -30,7 +32,6 @@ public class TURNServerHandle extends ServerHandle{
 		if(relayEndpoints.containsKey(publicEndpoint)){		
 			try{
 				if(message.getEventHeader()!=EventHeader.PING){
-					System.out.println("Relay message!!");
 			
 					Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 						
@@ -39,6 +40,8 @@ public class TURNServerHandle extends ServerHandle{
 					//System.out.println(receivedPacket.getData().length);
 				
 					//Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
+					System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
+
 					server.sendMessage(message, otherEndpoint.getAddress(), otherEndpoint.getPort());
 					//UDPServer.sendMessage(receivedPacket.getData(), publicEndpoint.getAddress(), publicEndpoint.getPort());
 				}
