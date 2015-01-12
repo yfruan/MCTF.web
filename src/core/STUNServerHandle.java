@@ -90,6 +90,7 @@ public class STUNServerHandle extends ServerHandle {
 					NetworkInfo info = networkInfos.get(userId);
 					Endpoint otherEndpoint = info.getPublicEndpoint();
 					relayEndpoints.put(publicEndpoint, otherEndpoint);
+					relayEndpoints.put(otherEndpoint, publicEndpoint);
 					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.RELAY, true));
 				}
 				else
