@@ -85,15 +85,16 @@ public class STUNServerHandle extends ServerHandle {
 				String userId = (String) simpleSTUN.getContent();
 
 				//System.out.println(publicEndpoint);
-
+				Message reply;
 				if (networkInfos.containsKey(userId)) {
 					NetworkInfo info = networkInfos.get(userId);
 					Endpoint otherEndpoint = info.getPublicEndpoint();
 					relayEndpoints.put(publicEndpoint, otherEndpoint);
-
-					Message reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.RELAY, true));
-					server.sendMessage(reply, remoteAddress, remotePort);
+					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.RELAY, true));
 				}
+				else
+					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.RELAY, false));
+				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
 			
