@@ -2,15 +2,15 @@ package protocol;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class DrawPayload implements Serializable{
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int flag;
-	private String capacityClass;
+	private int flag;                      // the action of draw
+	private String capacityClass;          // special draw information
 	private Object capacity ;
 	
 	public DrawPayload(int flage, String capacityClass, Object capacity){

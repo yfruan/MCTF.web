@@ -3,19 +3,20 @@ package protocol;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The message format
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class Message implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int messageId=-1;
-	private boolean isReliable=false;
-	private String senderId;
-	private int eventHeader; 
+	private int messageId=-1;                   
+	private boolean isReliable=false;           // the message reliable or not
+	private String senderId; 
+	private int eventHeader;                    // the message belongs to which event
 	
-	private int code;  // request, reply 
+	private int code;  // request or reply 
 	private int repliedMessageId=-1;  // if the message is reply, set this field, otherwise -1
 	
 	private Object payload=null;
@@ -24,15 +25,7 @@ public class Message implements Serializable{
 	
 	public final static int REQUEST=0;
 	public final static int REPLY=1;
-	
-	/*
-	public Message(int eventHeader, Object payload){
-		this.eventHeader=eventHeader;
-		this.payload=payload;
-		this.messageId=count;
-		count++;
-	}*/
-	
+
 	public Message(String senderId,int eventHeader, Object payload){
 		this.senderId=senderId;
 		this.eventHeader=eventHeader;
