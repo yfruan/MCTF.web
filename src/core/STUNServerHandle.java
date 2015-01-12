@@ -17,8 +17,8 @@ import protocol.SimpleSTUN;
 public class STUNServerHandle extends ServerHandle {
 
 	// endpoint to be relayed
-	private Map<Endpoint, Endpoint> relayEndpoints;
-	// network info of users
+	private Map<Endpoint, Endpoint> relayEndpoints;    
+	// network info of registered users
 	private Map<String, NetworkInfo> networkInfos;
 
 	private final String SERVER = "STUNServer";
@@ -37,7 +37,7 @@ public class STUNServerHandle extends ServerHandle {
 		// System.out.println("public address: "+ remoteAddress);
 		// System.out.println("public port: "+remotePort);
 		Endpoint publicEndpoint = new Endpoint(remoteAddress, remotePort);
-		System.out.println(publicEndpoint);
+		//System.out.println(publicEndpoint);
 
 		Message message = (Message) SerializationUtils.deserialize(receivedPacket.getData());
 
@@ -56,6 +56,7 @@ public class STUNServerHandle extends ServerHandle {
 			switch (simpleSTUN.getFlag()) {
 
 			case STUNFlag.REGISTER: {
+				System.out.println("STUN REGISTER message from "+publicEndpoint);
 				Endpoint privateEndpoint = (Endpoint) simpleSTUN.getContent();
 				// System.out.println("private address: "+privateEndpoint.getAddress());
 				// System.out.println("private port: "+privateEndpoint.getPort());
@@ -66,6 +67,7 @@ public class STUNServerHandle extends ServerHandle {
 			}
 
 			case STUNFlag.GETINFO: {
+				System.out.println("STUN GETINFO message from "+publicEndpoint);
 				String userId = (String) simpleSTUN.getContent();
 				Message reply;
 
@@ -79,9 +81,10 @@ public class STUNServerHandle extends ServerHandle {
 			}
 
 			case STUNFlag.RELAY: {
+				System.out.println("STUN RELAY message from "+publicEndpoint);
 				String userId = (String) simpleSTUN.getContent();
 
-				System.out.println(publicEndpoint);
+				//System.out.println(publicEndpoint);
 
 				if (networkInfos.containsKey(userId)) {
 					NetworkInfo info = networkInfos.get(userId);
@@ -93,19 +96,23 @@ public class STUNServerHandle extends ServerHandle {
 				}
 				break;
 			}
+			
+			case STUNFlag.UNRELAY: {
+				System.out.println("STUN UNRELAY message from "+publicEndpoint);
+				if (relayEndpoints.containsKey(publicEndpoint))
+					relayEndpoints.remove(publicEndpoint);
+				break;
+			}
+			
 			case STUNFlag.UNREGISTER: {
-				if (networkInfos.containsKey(senderId)) {
-					NetworkInfo info = networkInfos.get(senderId);
+				System.out.println("STUN UNREGISTER message from "+publicEndpoint);
+				if (networkInfos.containsKey(senderId))
 					networkInfos.remove(senderId);
-					if (relayEndpoints.containsKey(info.getPublicEndpoint())) {
-						relayEndpoints.remove(info.getPublicEndpoint());
-					}
-				}
 				break;
 			}
 
 			default: {
-				System.out.println("Wrong flag!!!!!");
+				System.out.println("Wrong STUN message !!!!!");
 				break;
 				}
 			}
