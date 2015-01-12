@@ -68,14 +68,22 @@ public class STUNServerHandle extends ServerHandle {
 
 			case STUNFlag.GETINFO: {
 				System.out.println("STUN GETINFO message from "+publicEndpoint);
-				String userId = (String) simpleSTUN.getContent();
+				String[] userIds=(String[]) simpleSTUN.getContent();
 				Message reply;
-
-				if (networkInfos.containsKey(userId)) {
-					NetworkInfo info = networkInfos.get(userId);
-					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.GETINFO, info));
-				} else
-					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.GETINFO, null));
+				int length=userIds.length;
+				NetworkInfo[] infos=new NetworkInfo[length];
+				
+				String userId;
+				for(int i=0;i<length;i++){
+					userId=userIds[i];
+					if (networkInfos.containsKey(userId)) {
+						infos[i]=(networkInfos.get(userId));
+					}
+					else
+						infos[i]=new NetworkInfo(userId,null,null);
+				}
+					
+				reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.GETINFO, infos));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
