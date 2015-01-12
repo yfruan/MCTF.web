@@ -43,7 +43,9 @@ public class TURNServerHandle extends ServerHandle{
 			catch(Exception e){
 				e.printStackTrace();
 			}
-		}	        
+		}	
+		else
+			System.out.println("Cannot relay for "+publicEndpoint);
 	}
 
 }
