@@ -35,7 +35,6 @@ public class TURNServerHandle extends ServerHandle{
 					Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 					System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
 					server.sendMessage(message, otherEndpoint.getAddress(), otherEndpoint.getPort());
-					//UDPServer.sendMessage(receivedPacket.getData(), publicEndpoint.getAddress(), publicEndpoint.getPort());
 				}
 				//Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 				//System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
