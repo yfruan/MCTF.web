@@ -19,7 +19,7 @@ public class UDPServer implements Runnable{
     ExecutorService executorService;
 
 	boolean isStopped=false;
-	private final int MAXPACKETSIZE=32000;   
+	private final int MAXPACKETSIZE=64000;   
     
 	public UDPServer(int port,ServerHandle serverHandle){
 		this.port=port;
