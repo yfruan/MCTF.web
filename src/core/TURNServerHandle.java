@@ -30,7 +30,7 @@ public class TURNServerHandle extends ServerHandle{
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
     	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
     	   
-    	System.out.println("Receiving message!!");
+    	//System.out.println("Receiving message!!");
     	if(message.getEventHeader()!=EventHeader.PING){
     		
     		if(relayEndpoints.containsKey(publicEndpoint)){		
