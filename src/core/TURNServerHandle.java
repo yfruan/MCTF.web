@@ -27,10 +27,12 @@ public class TURNServerHandle extends ServerHandle{
 		//System.out.println(remoteAddress);
 		//System.out.println("public address: "+ remoteAddress);
 		//System.out.println("public port: "+remotePort);
+		
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
-    	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
+    	//Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
     	   
-    	System.out.println("Receiving message!!");
+    	System.out.println("Receiving TURN message!!");
+    	/*
     	if(message.getEventHeader()!=EventHeader.PING){
     		
     		if(relayEndpoints.containsKey(publicEndpoint)){		
@@ -45,7 +47,20 @@ public class TURNServerHandle extends ServerHandle{
     		}	
     		else
     			System.out.println("Cannot relay for "+publicEndpoint);
-    		
-    	}
+    	}*/
+    	
+		if(relayEndpoints.containsKey(publicEndpoint)){		
+			try{
+				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
+				System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
+				server.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}	
+		else
+			System.out.println("Cannot relay for "+publicEndpoint);
+    	
 	}
 }

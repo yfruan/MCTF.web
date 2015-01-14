@@ -2,13 +2,14 @@ package protocol;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class SimpleSTUN implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private int flag;   // 
+	private int flag;              
 	private Object content=null;   // extra content to be sent
 	
 	public SimpleSTUN(int flag, Object content){

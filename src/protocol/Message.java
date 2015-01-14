@@ -21,7 +21,7 @@ public class Message implements Serializable{
 	
 	private Object payload=null;
 	
-	private static AtomicInteger count=new AtomicInteger(0);
+	private static AtomicInteger count=new AtomicInteger(0);   // record the current message id
 	
 	public final static int REQUEST=0;
 	public final static int REPLY=1;

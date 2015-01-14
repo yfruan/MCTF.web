@@ -1,5 +1,9 @@
 package protocol;
 
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class STUNFlag {	
 	public static final int REGISTER=0;     // registers public and private endpoints to one port
 	public static final int GETINFO=1;   	// gets network info of one user
