@@ -53,7 +53,7 @@ public class TURNServerHandle extends ServerHandle{
 			try{
 				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 				System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
-				server.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
+				server.sendMessage(receivedPacket.getData().clone(), otherEndpoint.getAddress(), otherEndpoint.getPort());
 			}
 			catch(Exception e){
 				e.printStackTrace();
