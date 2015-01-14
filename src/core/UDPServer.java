@@ -44,6 +44,7 @@ public class UDPServer implements Runnable{
         		System.out.println("Message received!");
         		
         		serverHandle.process(this,receivedPacket);
+        		Thread.sleep(10);
 	        }	        
 		}
 		catch (Exception e) {
