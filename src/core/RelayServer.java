@@ -17,8 +17,8 @@ public class RelayServer{
 	public void start(){
 		System.out.println("Running STUN Server on port 1000 !!!!");
 		new Thread(this.STUNServer).start();;
-		System.out.println("Running TURN Server on port 1001 !!!!");
-		new Thread(this.TURNServer).start();
+		//System.out.println("Running TURN Server on port 1001 !!!!");
+		//new Thread(this.TURNServer).start();
 	}
 	
 	public void stop(){

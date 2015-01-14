@@ -44,13 +44,15 @@ public class STUNServerHandle extends ServerHandle {
 		int repliedMessageId = message.getMessageId();
 		String senderId = message.getSenderId();
 
-		// send ACK message
-		if (message.isReliable()) {
-			Message ACKMessage = new Message(SERVER, EventHeader.ACK,message.getMessageId());
-			server.sendMessage(ACKMessage, remoteAddress, remotePort);
-		}
 		
 		if (message.getEventHeader() == EventHeader.STUN) {
+			
+			// send ACK message
+			if (message.isReliable()) {
+				Message ACKMessage = new Message(SERVER, EventHeader.ACK,message.getMessageId());
+				server.sendMessage(ACKMessage, remoteAddress, remotePort);
+			}
+			
 			SimpleSTUN simpleSTUN = (SimpleSTUN) message.getPayload();
 			// parse simpleSTUN message relaying on flag
 			switch (simpleSTUN.getFlag()) {
@@ -126,6 +128,22 @@ public class STUNServerHandle extends ServerHandle {
 				break;
 				}
 			}
+		}
+		else{
+	    	if(message.getEventHeader()!=EventHeader.PING){		
+	    		if(relayEndpoints.containsKey(publicEndpoint)){		
+	    			try{
+	    				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
+	    				System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
+	    				server.sendMessage(message, otherEndpoint.getAddress(), otherEndpoint.getPort());
+	    			}
+	    			catch(Exception e){
+	    				e.printStackTrace();
+	    			}
+	    		}	
+	    		else
+	    			System.out.println("Cannot relay for "+publicEndpoint);
+	    	}   
 		}
 	}
 
