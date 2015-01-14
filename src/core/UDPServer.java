@@ -41,9 +41,8 @@ public class UDPServer implements Runnable{
 		        byte[] receiveData = new byte[MAXPACKETSIZE];
 		    	DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
         		socket.receive(receivedPacket);
-            	
-        		System.out.println("Message received!");
         		
+        		System.out.println("Message received!");
         		serverHandle.process(this,receivedPacket);
 	        }	        
 		}
