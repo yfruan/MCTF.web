@@ -70,6 +70,7 @@ public class UDPServer implements Runnable{
 	}
     
     public void sendMessage(byte[] data,InetAddress remoteAddress,int remotePort){
+    	System.out.println(data.length);
   		final DatagramPacket sendPacket = new DatagramPacket(data, data.length, remoteAddress, remotePort);
     	executorService.execute(new Runnable(){
     	    public void run() {
