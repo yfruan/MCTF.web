@@ -29,6 +29,7 @@ public class TURNServerHandle extends ServerHandle{
 		//System.out.println("public port: "+remotePort);
 		
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
+		byte[] data=receivedPacket.getData();
     	//Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());
     	   
     	System.out.println("Receiving TURN message!!");
@@ -53,7 +54,7 @@ public class TURNServerHandle extends ServerHandle{
 			try{
 				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
 				System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
-				server.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
+				server.sendMessage(data, otherEndpoint.getAddress(), otherEndpoint.getPort());
 			}
 			catch(Exception e){
 				e.printStackTrace();
