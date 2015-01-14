@@ -27,8 +27,8 @@ public class UDPServer implements Runnable{
         try {
 			this.socket = new DatagramSocket(this.port);
 			this.socket.setReceiveBufferSize(64000);
-			//this.executorService = Executors.newFixedThreadPool(50);
-			this.executorService = Executors.newCachedThreadPool();
+			this.executorService = Executors.newFixedThreadPool(50);
+			//this.executorService = Executors.newCachedThreadPool();
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
