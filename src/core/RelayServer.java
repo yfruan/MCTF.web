@@ -19,10 +19,7 @@ public class RelayServer{
 		System.out.println("Running STUN Server on port 1000 !!!!");
 		new Thread(this.STUNServer).start();;
 		System.out.println("Running TURN Server on port 1001 !!!!");
-		Thread TURNThread=new Thread(this.TURNServer);
-		TURNThread.setPriority(Thread.MAX_PRIORITY);
-		TURNThread.start();
-		//new Thread(this.TURNServer).start();
+		new Thread(this.TURNServer).start();
 	}
 	
 	public void stop(){
