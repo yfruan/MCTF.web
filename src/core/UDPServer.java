@@ -26,7 +26,6 @@ public class UDPServer implements Runnable{
 		this.serverHandle=serverHandle;
         try {
 			this.socket = new DatagramSocket(this.port);
-			//this.socket.setReceiveBufferSize(64000);
 			//this.executorService = Executors.newFixedThreadPool(50);
 			this.executorService = Executors.newCachedThreadPool();
 		} catch (SocketException e) {
@@ -41,8 +40,9 @@ public class UDPServer implements Runnable{
 		        byte[] receiveData = new byte[MAXPACKETSIZE];
 		    	DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
         		socket.receive(receivedPacket);
-        		
+            	
         		System.out.println("Message received!");
+        		
         		serverHandle.process(this,receivedPacket);
 	        }	        
 		}
