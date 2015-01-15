@@ -75,6 +75,7 @@ public class UDPServer implements Runnable{
     	    public void run() {
               	 try{	 
               		 //System.out.println("Send UDP message!");
+              		 System.out.println(sendPacket.getAddress());
                		 socket.send(sendPacket);
                	 }
                	 catch(Exception e){
