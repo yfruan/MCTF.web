@@ -38,12 +38,25 @@ public class UDPServer implements Runnable{
 		try {
 	        while (!isStopped()) {
 		        byte[] receiveData = new byte[MAXPACKETSIZE];
-		    	DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
+		    	final DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
         		socket.receive(receivedPacket);
             	
+        		final UDPServer server=this;
         		//System.out.println("Message received!");
-        		
-        		serverHandle.process(this,receivedPacket);
+            	executorService.execute(new Runnable(){
+            	    public void run() {
+                      	 try{	    		
+                      		 //System.out.println("Send UDP message!");
+                       		 //socket.send(sendPacket);
+                     		serverHandle.process(server,receivedPacket);
+
+                       	 }
+                       	 catch(Exception e){
+                       		 e.printStackTrace();
+                       	 }    	    
+                   }
+            	});	
+        		//serverHandle.process(this,receivedPacket);
 	        }	        
 		}
 		catch (Exception e) {
@@ -75,7 +88,7 @@ public class UDPServer implements Runnable{
     	    public void run() {
               	 try{	 
               		 //System.out.println("Send UDP message!");
-              		 System.out.println(sendPacket.getAddress());
+              		 //System.out.println(sendPacket.getAddress());
                		 socket.send(sendPacket);
                	 }
                	 catch(Exception e){
