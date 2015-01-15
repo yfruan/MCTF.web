@@ -42,12 +42,10 @@ public class UDPServer implements Runnable{
         		socket.receive(receivedPacket);
             	
         		final UDPServer server=this;
-        		//System.out.println("Message received!");
+        		System.out.println("Message received!");
             	executorService.execute(new Runnable(){
             	    public void run() {
                       	 try{	    		
-                      		 //System.out.println("Send UDP message!");
-                       		 //socket.send(sendPacket);
                      		serverHandle.process(server,receivedPacket);
 
                        	 }
