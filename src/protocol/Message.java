@@ -19,21 +19,21 @@ public class Message implements Serializable{
 	private int code;  // request or reply 
 	private int repliedMessageId=-1;  // if the message is reply, set this field, otherwise -1
 	
-	private Object payload=null;
+	private byte[] payload=null;
 	
-	private static AtomicInteger count=new AtomicInteger(0);
+	private static AtomicInteger count=new AtomicInteger(0);   // record the current message id
 	
 	public final static int REQUEST=0;
 	public final static int REPLY=1;
 
-	public Message(String senderId,int eventHeader, Object payload){
+	public Message(String senderId,int eventHeader, byte[] payload){
 		this.senderId=senderId;
 		this.eventHeader=eventHeader;
 		this.payload=payload;
 		this.messageId=count.getAndIncrement();
 	}
 	
-	public Message(String senderId,int eventHeader, int code, Object payload){
+	public Message(String senderId,int eventHeader, int code, byte[] payload){
 		this.senderId=senderId;
 		this.eventHeader=eventHeader;
 		this.code=code;
@@ -41,7 +41,7 @@ public class Message implements Serializable{
 		this.messageId=count.getAndIncrement();
 	}
 	
-	public Message(String senderId,int eventHeader, int code, int repliedMessageId,Object payload){
+	public Message(String senderId,int eventHeader, int code, int repliedMessageId,byte[] payload){
 		this.senderId=senderId;
 		this.eventHeader=eventHeader;
 		this.code=code;
@@ -75,7 +75,7 @@ public class Message implements Serializable{
 		return eventHeader;
 	}
 
-	public Object getPayload() {
+	public byte[] getPayload() {
 		return payload;
 	}
 

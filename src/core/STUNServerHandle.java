@@ -46,12 +46,12 @@ public class STUNServerHandle extends ServerHandle {
 
 		// send ACK message
 		if (message.isReliable()) {
-			Message ACKMessage = new Message(SERVER, EventHeader.ACK,message.getMessageId());
+			Message ACKMessage = new Message(SERVER, EventHeader.ACK,SerializationUtils.serialize(message.getMessageId()));
 			server.sendMessage(ACKMessage, remoteAddress, remotePort);
 		}
 		
 		if (message.getEventHeader() == EventHeader.STUN) {
-			SimpleSTUN simpleSTUN = (SimpleSTUN) message.getPayload();
+			SimpleSTUN simpleSTUN = SerializationUtils.deserialize(message.getPayload());
 			// parse simpleSTUN message relaying on flag
 			switch (simpleSTUN.getFlag()) {
 
@@ -83,7 +83,8 @@ public class STUNServerHandle extends ServerHandle {
 						infos[i]=new NetworkInfo(userId,null,null);
 				}
 					
-				reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.GETINFO, infos));
+				reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
+						SerializationUtils.serialize(new SimpleSTUN(STUNFlag.GETINFO, infos)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
@@ -99,10 +100,12 @@ public class STUNServerHandle extends ServerHandle {
 					Endpoint otherEndpoint = info.getPublicEndpoint();
 					relayEndpoints.put(publicEndpoint, otherEndpoint);
 					relayEndpoints.put(otherEndpoint, publicEndpoint);
-					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.RELAY, true));
+					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
+							SerializationUtils.serialize(new SimpleSTUN(STUNFlag.RELAY, true)));
 				}
 				else
-					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, new SimpleSTUN(STUNFlag.RELAY, false));
+					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
+							SerializationUtils.serialize(new SimpleSTUN(STUNFlag.RELAY, false)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
