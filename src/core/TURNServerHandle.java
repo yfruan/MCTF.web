@@ -23,15 +23,10 @@ public class TURNServerHandle extends ServerHandle{
 	public void process(UDPServer server, DatagramPacket receivedPacket) {
 		InetAddress remoteAddress = receivedPacket.getAddress();
 		int remotePort=receivedPacket.getPort();
-		
-		//System.out.println(remoteAddress);
-		//System.out.println("public address: "+ remoteAddress);
-		//System.out.println("public port: "+remotePort);
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
 		
     	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());    	
     	if(message.getEventHeader()!=EventHeader.PING){
-    		
     		if(relayEndpoints.containsKey(publicEndpoint)){		
     			try{
     				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
@@ -45,19 +40,6 @@ public class TURNServerHandle extends ServerHandle{
     		else
     			System.out.println("Cannot relay for "+publicEndpoint);	
     	}
-		
-		/*
-		if(relayEndpoints.containsKey(publicEndpoint)){		
-			try{
-				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
-				System.out.println("Relay message from "+publicEndpoint+" to "+otherEndpoint);
-				server.sendMessage(receivedPacket.getData(), otherEndpoint.getAddress(), otherEndpoint.getPort());
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
-		}	
-		else
-			System.out.println("Cannot relay for "+publicEndpoint);	*/
+
 	}
 }
