@@ -1,26 +1,30 @@
-package core;
+package network;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Map;
 
+import network.address.Endpoint;
+import network.protocol.EventHeader;
+import network.protocol.Message;
+
 import org.apache.commons.lang3.SerializationUtils;
 
-import protocol.Endpoint;
-import protocol.EventHeader;
-import protocol.Message;
-
-public class TURNServerHandle extends ServerHandle{
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
+public class TURNServerHandler extends ServerHandler{
 
 	// endpoint to be relayed
 	private Map<Endpoint, Endpoint> relayEndpoints;
 	
-	public TURNServerHandle(Map<Endpoint, Endpoint> relayEndpoints){
+	public TURNServerHandler(Map<Endpoint, Endpoint> relayEndpoints){
 		this.relayEndpoints=relayEndpoints;
 	}
 	
 	@Override
-	public void process(UDPServer server, DatagramPacket receivedPacket) {
+	public void handle(UDPServer server, DatagramPacket receivedPacket) {
 		InetAddress remoteAddress = receivedPacket.getAddress();
 		int remotePort=receivedPacket.getPort();
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);

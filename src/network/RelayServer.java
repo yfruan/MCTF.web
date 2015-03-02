@@ -1,8 +1,13 @@
-package core;
+package network;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import protocol.Endpoint;
+import network.address.Endpoint;
+
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class RelayServer{
 
 	private Map<Endpoint,Endpoint> relayEndpoints;
@@ -10,8 +15,8 @@ public class RelayServer{
 
 	public RelayServer(){
 		this.relayEndpoints=new ConcurrentHashMap<>();
-		this.STUNServer=new UDPServer(1000,new STUNServerHandle(relayEndpoints));
-		this.TURNServer=new UDPServer(1001,new TURNServerHandle(relayEndpoints));
+		this.STUNServer=new UDPServer(1000,new STUNServerHandler(relayEndpoints));
+		this.TURNServer=new UDPServer(1001,new TURNServerHandler(relayEndpoints));
 	}
 	
 	public void start(){

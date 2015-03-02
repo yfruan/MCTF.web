@@ -1,31 +1,29 @@
-package protocol;
+package network.protocol;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The message format
+ * Message protocol
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
 public class Message implements Serializable{
-	
 	private static final long serialVersionUID = 1L;
 	
 	private int messageId=-1;                   
-	private boolean isReliable=false;           // the message reliable or not
-	private String senderId; 
-	private int eventHeader;                    // the message belongs to which event
+	private boolean isReliable=false;           //message reliable or not
+	private String senderId; 					// who sends message
 	
 	private int code;  // request or reply 
-	private int repliedMessageId=-1;  // if the message is reply, set this field, otherwise -1
-	
-	private byte[] payload=null;
-	
-	private static AtomicInteger count=new AtomicInteger(0);   // record the current message id
-	
 	public final static int REQUEST=0;
 	public final static int REPLY=1;
-
+	private int repliedMessageId=-1;  // if message is reply, set this field, otherwise -1
+	
+	private int eventHeader;                    // message event
+	private byte[] payload=null;
+	
+	private static AtomicInteger count=new AtomicInteger(0);   // count message number
+	
 	public Message(String senderId,int eventHeader, byte[] payload){
 		this.senderId=senderId;
 		this.eventHeader=eventHeader;

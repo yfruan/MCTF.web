@@ -1,4 +1,4 @@
-package core;
+package network;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -7,23 +7,27 @@ import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import network.protocol.Message;
+
 import org.apache.commons.lang3.SerializationUtils;
 
-import protocol.Message;
-
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class UDPServer implements Runnable{
 	int port;
 	DatagramSocket socket;
-    ServerHandle serverHandle;
+    ServerHandler serverHandler;
     
     ExecutorService executorService;
 
 	boolean isStopped=false;
 	private final int MAXPACKETSIZE=32000;   
     
-	public UDPServer(int port,ServerHandle serverHandle){
+	public UDPServer(int port,ServerHandler serverHandle){
 		this.port=port;
-		this.serverHandle=serverHandle;
+		this.serverHandler=serverHandle;
         try {
 			this.socket = new DatagramSocket(this.port);
 			//this.socket.setReceiveBufferSize(64000);
@@ -47,7 +51,7 @@ public class UDPServer implements Runnable{
             	executorService.execute(new Runnable(){
             	    public void run() {
                       	 try{	    		
-                     		serverHandle.process(server,receivedPacket);
+                     		serverHandler.handle(server,receivedPacket);
                        	 }
                        	 catch(Exception e){
                        		 e.printStackTrace();

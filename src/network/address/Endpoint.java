@@ -1,13 +1,13 @@
-package protocol;
+package network.address;
 
 import java.io.Serializable;
 import java.net.InetAddress;
 
-// store the private and public address and port of user
+/**
+ * User address and port
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
 public class Endpoint implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private InetAddress address;

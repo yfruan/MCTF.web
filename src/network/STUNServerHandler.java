@@ -1,20 +1,24 @@
-package core;
+package network;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import network.address.Endpoint;
+import network.address.NetworkInfo;
+import network.protocol.EventHeader;
+import network.protocol.Message;
+import network.protocol.Payload;
+import network.protocol.STUNFlag;
+
 import org.apache.commons.lang3.SerializationUtils;
 
-import protocol.Endpoint;
-import protocol.EventHeader;
-import protocol.Message;
-import protocol.NetworkInfo;
-import protocol.STUNFlag;
-import protocol.SimpleSTUN;
-
-public class STUNServerHandle extends ServerHandle {
+/**
+ * 
+ * @author Yifan Ruan (ry222ad@student.lnu.se)
+ */
+public class STUNServerHandler extends ServerHandler {
 
 	// endpoint to be relayed
 	private Map<Endpoint, Endpoint> relayEndpoints;    
@@ -23,13 +27,13 @@ public class STUNServerHandle extends ServerHandle {
 
 	private final String SERVER = "STUNServer";
 
-	public STUNServerHandle(Map<Endpoint, Endpoint> relayEndpoints) {
+	public STUNServerHandler(Map<Endpoint, Endpoint> relayEndpoints) {
 		this.relayEndpoints = relayEndpoints;
 		this.networkInfos = new ConcurrentHashMap<>();
 	}
 	
 	@Override
-	public void process(UDPServer server, DatagramPacket receivedPacket) {
+	public void handle(UDPServer server, DatagramPacket receivedPacket) {
 
 		InetAddress remoteAddress = receivedPacket.getAddress();
 		int remotePort = receivedPacket.getPort();
@@ -51,13 +55,13 @@ public class STUNServerHandle extends ServerHandle {
 		}
 		
 		if (message.getEventHeader() == EventHeader.STUN) {
-			SimpleSTUN simpleSTUN = SerializationUtils.deserialize(message.getPayload());
+			Payload payload = SerializationUtils.deserialize(message.getPayload());
 			// parse simpleSTUN message relaying on flag
-			switch (simpleSTUN.getFlag()) {
+			switch (payload.getFlag()) {
 
 			case STUNFlag.REGISTER: {
 				System.out.println("STUN REGISTER message from "+publicEndpoint);
-				Endpoint privateEndpoint = (Endpoint) simpleSTUN.getContent();
+				Endpoint privateEndpoint = (Endpoint) payload.getData();
 				// System.out.println("private address: "+privateEndpoint.getAddress());
 				// System.out.println("private port: "+privateEndpoint.getPort());
 
@@ -68,7 +72,7 @@ public class STUNServerHandle extends ServerHandle {
 
 			case STUNFlag.GETINFO: {
 				System.out.println("STUN GETINFO message from "+publicEndpoint);
-				String[] userIds=(String[]) simpleSTUN.getContent();
+				String[] userIds=(String[]) payload.getData();
 				Message reply;
 				int length=userIds.length;
 				NetworkInfo[] infos=new NetworkInfo[length];
@@ -84,14 +88,14 @@ public class STUNServerHandle extends ServerHandle {
 				}
 					
 				reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
-						SerializationUtils.serialize(new SimpleSTUN(STUNFlag.GETINFO, infos)));
+						SerializationUtils.serialize(new Payload(STUNFlag.GETINFO, infos)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
 
 			case STUNFlag.RELAY: {
 				System.out.println("STUN RELAY message from "+publicEndpoint);
-				String userId = (String) simpleSTUN.getContent();
+				String userId = (String) payload.getData();
 
 				//System.out.println(publicEndpoint);
 				Message reply;
@@ -101,11 +105,11 @@ public class STUNServerHandle extends ServerHandle {
 					relayEndpoints.put(publicEndpoint, otherEndpoint);
 					relayEndpoints.put(otherEndpoint, publicEndpoint);
 					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
-							SerializationUtils.serialize(new SimpleSTUN(STUNFlag.RELAY, true)));
+							SerializationUtils.serialize(new Payload(STUNFlag.RELAY, true)));
 				}
 				else
 					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
-							SerializationUtils.serialize(new SimpleSTUN(STUNFlag.RELAY, false)));
+							SerializationUtils.serialize(new Payload(STUNFlag.RELAY, false)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
