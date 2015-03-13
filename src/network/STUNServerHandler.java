@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import network.address.Endpoint;
 import network.address.NetworkInfo;
-import network.protocol.EventHeader;
+import network.protocol.Event;
 import network.protocol.Message;
 import network.protocol.Payload;
 import network.protocol.STUNFlag;
@@ -50,11 +50,11 @@ public class STUNServerHandler extends ServerHandler {
 
 		// send ACK message
 		if (message.isReliable()) {
-			Message ACKMessage = new Message(SERVER, EventHeader.ACK,SerializationUtils.serialize(message.getMessageId()));
+			Message ACKMessage = new Message(SERVER, Message.ACK,message.getMessageId(),null);
 			server.sendMessage(ACKMessage, remoteAddress, remotePort);
 		}
 		
-		if (message.getEventHeader() == EventHeader.STUN) {
+		if (message.getEventHeader() == Event.STUN) {
 			Payload payload = SerializationUtils.deserialize(message.getPayload());
 			// parse simpleSTUN message relaying on flag
 			switch (payload.getFlag()) {
@@ -87,7 +87,7 @@ public class STUNServerHandler extends ServerHandler {
 						infos[i]=new NetworkInfo(userId,null,null);
 				}
 					
-				reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
+				reply = new Message(SERVER, Message.REPLY, repliedMessageId,
 						SerializationUtils.serialize(new Payload(STUNFlag.GETINFO, infos)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
@@ -104,11 +104,11 @@ public class STUNServerHandler extends ServerHandler {
 					Endpoint otherEndpoint = info.getPublicEndpoint();
 					relayEndpoints.put(publicEndpoint, otherEndpoint);
 					relayEndpoints.put(otherEndpoint, publicEndpoint);
-					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
+					reply = new Message(SERVER,Message.REPLY, repliedMessageId, 
 							SerializationUtils.serialize(new Payload(STUNFlag.RELAY, true)));
 				}
 				else
-					reply = new Message(SERVER, EventHeader.STUN,Message.REPLY, repliedMessageId, 
+					reply = new Message(SERVER,Message.REPLY, repliedMessageId,
 							SerializationUtils.serialize(new Payload(STUNFlag.RELAY, false)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;

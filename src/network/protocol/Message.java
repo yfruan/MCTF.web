@@ -14,34 +14,29 @@ public class Message implements Serializable{
 	private boolean isReliable=false;           //message reliable or not
 	private String senderId; 					// who sends message
 	
-	private int code;  // request or reply 
-	public final static int REQUEST=0;
-	public final static int REPLY=1;
+	private int code=-1;       // message type
+	public final static int GENERAL=0;
+	public final static int ACK=1;
+	public final static int PING=2;
+	public final static int REPLY=3;
+	
 	private int repliedMessageId=-1;  // if message is reply, set this field, otherwise -1
 	
-	private int eventHeader;                    // message event
+	private int eventHeader=-1;      // message event
 	private byte[] payload=null;
 	
 	private static AtomicInteger count=new AtomicInteger(0);   // count message number
 	
 	public Message(String senderId,int eventHeader, byte[] payload){
 		this.senderId=senderId;
+		this.code=Message.GENERAL;
 		this.eventHeader=eventHeader;
 		this.payload=payload;
 		this.messageId=count.getAndIncrement();
 	}
 	
-	public Message(String senderId,int eventHeader, int code, byte[] payload){
+	public Message(String senderId, int code, int repliedMessageId, byte[] payload){
 		this.senderId=senderId;
-		this.eventHeader=eventHeader;
-		this.code=code;
-		this.payload=payload;
-		this.messageId=count.getAndIncrement();
-	}
-	
-	public Message(String senderId,int eventHeader, int code, int repliedMessageId,byte[] payload){
-		this.senderId=senderId;
-		this.eventHeader=eventHeader;
 		this.code=code;
 		this.repliedMessageId=repliedMessageId;
 		this.payload=payload;

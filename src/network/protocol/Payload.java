@@ -3,7 +3,7 @@ package network.protocol;
 import java.io.Serializable;
 
 /**
- * Payload of message
+ * Message payload
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
 public class Payload implements Serializable{

@@ -3,11 +3,8 @@ package network;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Map;
-
 import network.address.Endpoint;
-import network.protocol.EventHeader;
 import network.protocol.Message;
-
 import org.apache.commons.lang3.SerializationUtils;
 
 /**
@@ -29,8 +26,9 @@ public class TURNServerHandler extends ServerHandler{
 		int remotePort=receivedPacket.getPort();
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
 		
-    	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());    	
-    	if(message.getEventHeader()!=EventHeader.PING){
+    	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());    
+    	
+    	if(message.getCode()!=Message.PING){
     		if(relayEndpoints.containsKey(publicEndpoint)){		
     			try{
     				Endpoint otherEndpoint=relayEndpoints.get(publicEndpoint);
