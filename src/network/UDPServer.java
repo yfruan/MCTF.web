@@ -38,14 +38,13 @@ public class UDPServer implements Runnable{
     ExecutorService executorService;
 
 	boolean isStopped=false;
-	private final int MAXPACKETSIZE=32000;   
+	private final int MAX_PACKET_SIZE=32000;   
     
 	public UDPServer(int port,ServerHandler serverHandle){
 		this.port=port;
 		this.serverHandler=serverHandle;
         try {
 			this.socket = new DatagramSocket(this.port);
-			//this.socket.setReceiveBufferSize(64000);
 			//this.executorService = Executors.newFixedThreadPool(50);
 			this.executorService = Executors.newCachedThreadPool();
 		} catch (SocketException e) {
@@ -57,7 +56,7 @@ public class UDPServer implements Runnable{
 	public void run() {		 
 		try {
 	        while (!isStopped()) {
-		        byte[] receiveData = new byte[MAXPACKETSIZE];
+		        byte[] receiveData = new byte[MAX_PACKET_SIZE];
 		    	final DatagramPacket receivedPacket = new DatagramPacket(receiveData, receiveData.length);
         		socket.receive(receivedPacket);
             	
@@ -73,7 +72,6 @@ public class UDPServer implements Runnable{
                        	 }    	    
                    }
             	});	
-        		//serverHandle.process(this,receivedPacket);
 	        }	        
 		}
 		catch (Exception e) {
@@ -98,22 +96,7 @@ public class UDPServer implements Runnable{
            }
     	});	
 	}
-    
-    public void sendMessage(byte[] data,InetAddress remoteAddress,int remotePort){
-  		final DatagramPacket sendPacket = new DatagramPacket(data, data.length, remoteAddress, remotePort);
-    	executorService.execute(new Runnable(){
-    	    public void run() {
-              	 try{	 
-              		 //System.out.println("Send UDP message!");
-               		 socket.send(sendPacket);
-               	 }
-               	 catch(Exception e){
-               		 e.printStackTrace();
-               	 }    	    
-           }
-    	});	
-	}
-		
+    		
     private synchronized boolean isStopped() {
         return this.isStopped;
     }

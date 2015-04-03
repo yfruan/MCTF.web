@@ -19,28 +19,27 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Message protocol
+ * Definition of the formatted message to be delivered
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
 public class Message implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	private int messageId=-1;                   
-	private boolean isReliable=false;           //message reliable or not
-	private String senderId; 					// who sends message
+	private boolean isReliable=false;			// the message reliable or not
+	private int messageId=-1;					// the unique identifier                   
+	private String senderId;					// who sending the message
 	
-	private int code=-1;       // message type
+	private int code=-1;       					// message type
 	public final static int GENERAL=0;
 	public final static int ACK=1;
 	public final static int PING=2;
 	public final static int REPLY=3;
+	private int repliedMessageId=-1;  			// if type of the message is REPLAY or ACK, set this field, otherwise equal to-1
 	
-	private int repliedMessageId=-1;  // if message is reply, set this field, otherwise -1
+	private int event=-1;      					// message event
+	private byte[] payload=null;				// actual data 
 	
-	private int event=-1;      // message event
-	private byte[] payload=null;
-	
-	private static AtomicInteger count=new AtomicInteger(0);   // count message number
+	private static AtomicInteger count=new AtomicInteger(0);   // message number count
 	
 	public Message(String senderId,int event, byte[] payload){
 		this.senderId=senderId;

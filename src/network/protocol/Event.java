@@ -23,6 +23,7 @@ import java.util.Map;
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
 public class Event {
+	// six default message events
 	public final static int STUN=0;
 	public final static int TURN=1;
 	public final static int CONNECT=2;

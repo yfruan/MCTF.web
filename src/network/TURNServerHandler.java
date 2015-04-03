@@ -49,7 +49,7 @@ public class TURNServerHandler extends ServerHandler{
     			
     			// send ACK message
     			if (message.isReliable()) {
-    				Message ACKMessage = new Message(SERVER, Message.ACK,message.getMessageId(),null);
+    				Message ACKMessage = new Message(SERVER, Message.ACK,repliedMessageId,null);
     				server.sendMessage(ACKMessage, remoteAddress, remotePort);
     			}
     			

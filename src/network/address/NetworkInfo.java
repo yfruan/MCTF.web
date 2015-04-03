@@ -18,7 +18,7 @@ package network.address;
 import java.io.Serializable;
 
 /**
- * User public and private endpoints
+ * Combination of user public and private endpoints
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
 public class NetworkInfo implements Serializable{

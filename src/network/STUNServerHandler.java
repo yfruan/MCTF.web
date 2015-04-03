@@ -37,7 +37,6 @@ public class STUNServerHandler extends ServerHandler {
 	private Map<String, NetworkInfo> networkInfos = new ConcurrentHashMap<>();
 	private final String SERVER = "STUNServer";
 
-	
 	@Override
 	public void handle(UDPServer server, DatagramPacket receivedPacket) {
 
