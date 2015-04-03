@@ -19,12 +19,11 @@ import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import network.address.Endpoint;
+import network.assist.Serialization;
 import network.protocol.Event;
 import network.protocol.Message;
 import network.protocol.Payload;
 import network.protocol.TURNFlag;
-
-import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * 
@@ -41,7 +40,7 @@ public class TURNServerHandler extends ServerHandler{
 		int remotePort=receivedPacket.getPort();
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
 		
-    	Message message=(Message) SerializationUtils.deserialize(receivedPacket.getData());   
+    	Message message=(Message) Serialization.deserialize(receivedPacket.getData());   
 		int repliedMessageId = message.getMessageId();
 		
     	if(message.getCode()!=Message.PING){
@@ -54,7 +53,7 @@ public class TURNServerHandler extends ServerHandler{
     				server.sendMessage(ACKMessage, remoteAddress, remotePort);
     			}
     			
-    			Payload payload = SerializationUtils.deserialize(message.getPayload());
+    			Payload payload = (Payload)Serialization.deserialize(message.getPayload());
 
     			if(payload.getFlag()==TURNFlag.RELAY){
         			System.out.println("TURN RELAY message from "+publicEndpoint);
@@ -62,7 +61,7 @@ public class TURNServerHandler extends ServerHandler{
         			this.relayEndpoints.put(publicEndpoint, otherEndpoint);
         			//System.out.println(otherEndpoint);
         			Message reply=new Message(SERVER,Message.REPLY, repliedMessageId, 
-        						SerializationUtils.serialize(new Payload(TURNFlag.RELAY, true)));
+        					Serialization.serialize(new Payload(TURNFlag.RELAY, true)));
         			server.sendMessage(reply, remoteAddress, remotePort);
     			}
     			else if(payload.getFlag()==TURNFlag.UNRELAY){

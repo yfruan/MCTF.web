@@ -22,12 +22,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import network.address.Endpoint;
 import network.address.NetworkInfo;
+import network.assist.Serialization;
 import network.protocol.Event;
 import network.protocol.Message;
 import network.protocol.Payload;
 import network.protocol.STUNFlag;
-
-import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class STUNServerHandler extends ServerHandler {
 		Endpoint publicEndpoint = new Endpoint(remoteAddress, remotePort);
 		//System.out.println(publicEndpoint);
 
-		Message message = (Message) SerializationUtils.deserialize(receivedPacket.getData());
+		Message message = (Message) Serialization.deserialize(receivedPacket.getData());
 		int repliedMessageId = message.getMessageId();
 		String senderId = message.getSenderId();
 
@@ -58,7 +57,7 @@ public class STUNServerHandler extends ServerHandler {
 		}
 		
 		if (message.getEvent() == Event.STUN) {
-			Payload payload = SerializationUtils.deserialize(message.getPayload());
+			Payload payload = (Payload)Serialization.deserialize(message.getPayload());
 			
 			// parse simpleSTUN message
 			switch (payload.getFlag()) {
@@ -90,7 +89,7 @@ public class STUNServerHandler extends ServerHandler {
 				}
 					
 				reply = new Message(SERVER, Message.REPLY, repliedMessageId,
-						SerializationUtils.serialize(new Payload(STUNFlag.GETINFO, infos)));
+						Serialization.serialize(new Payload(STUNFlag.GETINFO, infos)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
