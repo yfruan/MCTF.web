@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright Yifan Ruan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package network.protocol;
 
 import java.io.Serializable;
@@ -22,15 +37,15 @@ public class Message implements Serializable{
 	
 	private int repliedMessageId=-1;  // if message is reply, set this field, otherwise -1
 	
-	private int eventHeader=-1;      // message event
+	private int event=-1;      // message event
 	private byte[] payload=null;
 	
 	private static AtomicInteger count=new AtomicInteger(0);   // count message number
 	
-	public Message(String senderId,int eventHeader, byte[] payload){
+	public Message(String senderId,int event, byte[] payload){
 		this.senderId=senderId;
 		this.code=Message.GENERAL;
-		this.eventHeader=eventHeader;
+		this.event=event;
 		this.payload=payload;
 		this.messageId=count.getAndIncrement();
 	}
@@ -64,8 +79,8 @@ public class Message implements Serializable{
 		return messageId;
 	}
 
-	public int getEventHeader() {
-		return eventHeader;
+	public int getEvent() {
+		return event;
 	}
 
 	public byte[] getPayload() {

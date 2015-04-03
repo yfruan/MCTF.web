@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright Yifan Ruan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package network;
 
 import java.net.DatagramPacket;
@@ -19,52 +34,39 @@ import org.apache.commons.lang3.SerializationUtils;
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
 public class STUNServerHandler extends ServerHandler {
-
-	// endpoint to be relayed
-	private Map<Endpoint, Endpoint> relayEndpoints;    
 	// network info of registered users
-	private Map<String, NetworkInfo> networkInfos;
-
+	private Map<String, NetworkInfo> networkInfos = new ConcurrentHashMap<>();
 	private final String SERVER = "STUNServer";
 
-	public STUNServerHandler(Map<Endpoint, Endpoint> relayEndpoints) {
-		this.relayEndpoints = relayEndpoints;
-		this.networkInfos = new ConcurrentHashMap<>();
-	}
 	
 	@Override
 	public void handle(UDPServer server, DatagramPacket receivedPacket) {
 
 		InetAddress remoteAddress = receivedPacket.getAddress();
 		int remotePort = receivedPacket.getPort();
-
-		// System.out.println("public address: "+ remoteAddress);
-		// System.out.println("public port: "+remotePort);
 		Endpoint publicEndpoint = new Endpoint(remoteAddress, remotePort);
 		//System.out.println(publicEndpoint);
 
 		Message message = (Message) SerializationUtils.deserialize(receivedPacket.getData());
-
 		int repliedMessageId = message.getMessageId();
 		String senderId = message.getSenderId();
 
 		// send ACK message
 		if (message.isReliable()) {
-			Message ACKMessage = new Message(SERVER, Message.ACK,message.getMessageId(),null);
+			Message ACKMessage = new Message(SERVER, Message.ACK,repliedMessageId,null);
 			server.sendMessage(ACKMessage, remoteAddress, remotePort);
 		}
 		
-		if (message.getEventHeader() == Event.STUN) {
+		if (message.getEvent() == Event.STUN) {
 			Payload payload = SerializationUtils.deserialize(message.getPayload());
-			// parse simpleSTUN message relaying on flag
+			
+			// parse simpleSTUN message
 			switch (payload.getFlag()) {
 
 			case STUNFlag.REGISTER: {
 				System.out.println("STUN REGISTER message from "+publicEndpoint);
 				Endpoint privateEndpoint = (Endpoint) payload.getData();
-				// System.out.println("private address: "+privateEndpoint.getAddress());
-				// System.out.println("private port: "+privateEndpoint.getPort());
-
+				//System.out.println(privateEndpoint);
 				NetworkInfo info = new NetworkInfo(senderId, privateEndpoint,publicEndpoint);
 				networkInfos.put(senderId, info);
 				break;
@@ -92,34 +94,6 @@ public class STUNServerHandler extends ServerHandler {
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}
-
-			case STUNFlag.RELAY: {
-				System.out.println("STUN RELAY message from "+publicEndpoint);
-				String userId = (String) payload.getData();
-
-				//System.out.println(publicEndpoint);
-				Message reply;
-				if (networkInfos.containsKey(userId)) {
-					NetworkInfo info = networkInfos.get(userId);
-					Endpoint otherEndpoint = info.getPublicEndpoint();
-					relayEndpoints.put(publicEndpoint, otherEndpoint);
-					relayEndpoints.put(otherEndpoint, publicEndpoint);
-					reply = new Message(SERVER,Message.REPLY, repliedMessageId, 
-							SerializationUtils.serialize(new Payload(STUNFlag.RELAY, true)));
-				}
-				else
-					reply = new Message(SERVER,Message.REPLY, repliedMessageId,
-							SerializationUtils.serialize(new Payload(STUNFlag.RELAY, false)));
-				server.sendMessage(reply, remoteAddress, remotePort);
-				break;
-			}
-			
-			case STUNFlag.UNRELAY: {
-				System.out.println("STUN UNRELAY message from "+publicEndpoint);
-				if (relayEndpoints.containsKey(publicEndpoint))
-					relayEndpoints.remove(publicEndpoint);
-				break;
-			}
 			
 			case STUNFlag.UNREGISTER: {
 				System.out.println("STUN UNREGISTER message from "+publicEndpoint);
@@ -135,5 +109,4 @@ public class STUNServerHandler extends ServerHandler {
 			}
 		}
 	}
-
 }
