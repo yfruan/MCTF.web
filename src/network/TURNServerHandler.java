@@ -59,6 +59,7 @@ public class TURNServerHandler extends ServerHandler{
         			System.out.println("TURN RELAY message from "+publicEndpoint);
         			Endpoint otherEndpoint = (Endpoint) payload.getData();
         			this.relayEndpoints.put(publicEndpoint, otherEndpoint);
+        			this.relayEndpoints.put(otherEndpoint, publicEndpoint);
         			//System.out.println(otherEndpoint);
         			Message reply=new Message(SERVER,Message.REPLY, repliedMessageId, 
         					Serialization.serialize(new Payload(TURNFlag.RELAY, true)));
