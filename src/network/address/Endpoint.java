@@ -17,26 +17,65 @@ package network.address;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoSerializable;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
 /**
- * User address and port
+ * Combination of user address and port
  * @author Yifan Ruan (ry222ad@student.lnu.se)
  */
-public class Endpoint implements Serializable{
+public class Endpoint implements Serializable,KryoSerializable{
 	private static final long serialVersionUID = 1L;
 	
 	private InetAddress address;
 	private int port;
+	
+	
+	@Override
+	public void read(Kryo kryo, Input input) {
+		try {
+			this.address=InetAddress.getByName(input.readString());
+			this.port=input.readInt();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
 
+	@Override
+	public void write(Kryo kryo, Output output) {
+		output.writeString(address.getHostAddress());
+		output.writeInt(port);
+	}
+	
+
+	public Endpoint(){}
+	
+	/**
+	 * Constructor
+	 * @param address the address
+	 * @param port the port
+	 */
 	public Endpoint(InetAddress address, int port) {
 		this.address = address;
 		this.port = port;
 	}
 	
+	/**
+	 * Get the address
+	 * @return the address
+	 */
 	public InetAddress getAddress() {
 		return address;
 	}
 	
+	/**
+	 * Get the port
+	 * @return the port
+	 */
 	public int getPort() {
 		return port;
 	}
@@ -56,6 +95,7 @@ public class Endpoint implements Serializable{
 	    return false;
 	}
 	
+	@Override
 	public String toString(){
 		return address+" : "+port;
 	}

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import network.address.Endpoint;
 import network.address.NetworkInfo;
-import network.assist.Serialization;
+import network.assist.Serializer;
 import network.protocol.Event;
 import network.protocol.Message;
 import network.protocol.Payload;
@@ -45,8 +45,9 @@ public class STUNServerHandler extends ServerHandler {
 		Endpoint publicEndpoint = new Endpoint(remoteAddress, remotePort);
 		//System.out.println(publicEndpoint);
 
-		Message message = (Message) Serialization.deserialize(receivedPacket.getData());
-		int repliedMessageId = message.getMessageId();
+		//Message message = (Message) Serialization.deserialize(receivedPacket.getData());
+		Message message = (Message) Serializer.read(receivedPacket.getData(),Message.class);
+		int repliedMessageId = message.getId();
 		String senderId = message.getSenderId();
 
 		// send ACK message
@@ -56,8 +57,9 @@ public class STUNServerHandler extends ServerHandler {
 		}
 		
 		if (message.getEvent() == Event.STUN) {
-			Payload payload = (Payload)Serialization.deserialize(message.getPayload());
-			
+			//Payload payload = (Payload)Serialization.deserialize(message.getPayload());
+			Payload payload = (Payload)Serializer.read(message.getPayload(),Payload.class);
+
 			// parse simpleSTUN message
 			switch (payload.getFlag()) {
 
@@ -87,8 +89,10 @@ public class STUNServerHandler extends ServerHandler {
 						infos[i]=new NetworkInfo(userId,null,null);
 				}
 					
+				//reply = new Message(SERVER, Message.REPLY, repliedMessageId,
+					//	Serialization.serialize(new Payload(STUNFlag.GETINFO, infos)));
 				reply = new Message(SERVER, Message.REPLY, repliedMessageId,
-						Serialization.serialize(new Payload(STUNFlag.GETINFO, infos)));
+						Serializer.write(new Payload(STUNFlag.GETINFO, infos)));
 				server.sendMessage(reply, remoteAddress, remotePort);
 				break;
 			}

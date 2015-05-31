@@ -25,7 +25,7 @@ public class Serialization {
 	
 	/**
 	 * Convert object to byte array
-	 * @param obj
+	 * @param obj the source object
 	 * @return converted byte array
 	 */
 	public static byte[] serialize(Object obj){
@@ -34,7 +34,7 @@ public class Serialization {
 	
 	/**
 	 * Convert byte array to object
-	 * @param data   
+	 * @param data  the source byte array data 
 	 * @return  converted object
 	 */
 	public static Object deserialize(byte[] data){

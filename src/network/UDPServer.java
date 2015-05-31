@@ -22,9 +22,9 @@ import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import network.assist.Serializer;
 import network.protocol.Message;
 
-import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * 
@@ -81,7 +81,8 @@ public class UDPServer implements Runnable{
 	
     public void sendMessage(Message message,InetAddress remoteAddress,int remotePort){
     	
-  		byte tempBuffer[]=SerializationUtils.serialize(message);
+  		//byte tempBuffer[]=SerializationUtils.serialize(message);
+  		byte tempBuffer[]=Serializer.write(message);
   		final DatagramPacket sendPacket = new DatagramPacket(tempBuffer, tempBuffer.length, remoteAddress, remotePort);
   		
     	executorService.execute(new Runnable(){

@@ -37,11 +37,21 @@ public class Event {
 	private static Map<String,Integer> customEvents=new HashMap<>();  
 	private static int eventCount=6; 
 		
+	/**
+	 * Register the custom event
+	 * @param event the custom event
+	 * @return the custom event identifier
+	 */
 	public static int registerCustomEvent(String event){
 		customEvents.put(event, eventCount);
 		return eventCount++;
 	}
 	
+	/**
+	 * Get the custom event identifier
+	 * @param event the custom event 
+	 * @return the identifier
+	 */
 	public static int customEvent(String event){
 		if(!customEvents.containsKey(event))
 			return -1;

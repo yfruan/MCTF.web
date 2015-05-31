@@ -18,8 +18,9 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import network.address.Endpoint;
-import network.assist.Serialization;
+import network.assist.Serializer;
 import network.protocol.Event;
 import network.protocol.Message;
 import network.protocol.Payload;
@@ -40,8 +41,9 @@ public class TURNServerHandler extends ServerHandler{
 		int remotePort=receivedPacket.getPort();
 		Endpoint publicEndpoint=new Endpoint(remoteAddress,remotePort);
 		
-    	Message message=(Message) Serialization.deserialize(receivedPacket.getData());   
-		int repliedMessageId = message.getMessageId();
+    	//Message message=(Message) Serialization.deserialize(receivedPacket.getData());   
+    	Message message=(Message) Serializer.read(receivedPacket.getData(),Message.class);   
+		int repliedMessageId = message.getId();
 		
     	if(message.getCode()!=Message.PING){
     		
@@ -53,7 +55,8 @@ public class TURNServerHandler extends ServerHandler{
     				server.sendMessage(ACKMessage, remoteAddress, remotePort);
     			}
     			
-    			Payload payload = (Payload)Serialization.deserialize(message.getPayload());
+    			//Payload payload = (Payload)Serialization.deserialize(message.getPayload());
+    			Payload payload = (Payload)Serializer.read(message.getPayload(),Payload.class);
 
     			if(payload.getFlag()==TURNFlag.RELAY){
         			System.out.println("TURN RELAY message from "+publicEndpoint);
@@ -61,8 +64,10 @@ public class TURNServerHandler extends ServerHandler{
         			this.relayEndpoints.put(publicEndpoint, otherEndpoint);
         			this.relayEndpoints.put(otherEndpoint, publicEndpoint);
         			//System.out.println(otherEndpoint);
+        			//Message reply=new Message(SERVER,Message.REPLY, repliedMessageId, 
+        				//	Serialization.serialize(new Payload(TURNFlag.RELAY, true)));
         			Message reply=new Message(SERVER,Message.REPLY, repliedMessageId, 
-        					Serialization.serialize(new Payload(TURNFlag.RELAY, true)));
+        					Serializer.write(new Payload(TURNFlag.RELAY, true)));
         			server.sendMessage(reply, remoteAddress, remotePort);
     			}
     			else if(payload.getFlag()==TURNFlag.UNRELAY){
